@@ -25,8 +25,7 @@ services:
       - PORT=3000
       - POSTGRES_URl=postgres://root:root@localhost:5432/weblex
   database:
-    container_name: welbex-database
-    image: postgres
+    build: ./database
     environment:
       - POSTGRES_PASSWORD=root
 
