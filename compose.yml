@@ -1,0 +1,29 @@
+services:
+  client:
+    command: 'npm run prod'
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    networks:
+      - welbex-network
+  server:
+    command: 'npm run start'
+    build: ./server
+    restart: unless-stopped
+    networks:
+      - welbex-network
+    depends_on:
+      - database
+    environment:
+      - PORT=3000
+      - POSTGRES_URl=postgres://root:root@localhost:5432/weblex
+  database:
+    container_name: welbex-database
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+
+networks:
+  welbex-network:
+    driver: bridge

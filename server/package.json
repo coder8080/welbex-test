@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node src/main.js"
+  },
+  "author": "coder8080",
+  "license": "SEE LICENSE IN LICENSE (PARENT FOLDER)",
+  "dependencies": {
+    "nodemon": "^2.0.19",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3"
+  }
+}

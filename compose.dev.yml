@@ -1,0 +1,35 @@
+services:
+  client:
+    command: 'npm run start'
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./client/src:/usr/src/app/src
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    networks:
+      - welbex-network
+  server:
+    command: 'npm run dev'
+    build: ./server
+    volumes:
+      - ./server/src:/usr/src/app/src
+    restart: unless-stopped
+    networks:
+      - welbex-network
+    depends_on:
+      - database
+    environment:
+      - PORT=3000
+      - POSTGRES_URl=postgres://root:root@localhost:5432/weblex
+  database:
+    container_name: welbex-database
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+
+networks:
+  welbex-network:
+    driver: bridge
