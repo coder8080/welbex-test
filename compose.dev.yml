@@ -20,14 +20,26 @@ services:
     networks:
       - welbex-network
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
       - PORT=3000
-      - POSTGRES_URl=postgres://root:root@localhost:5432/weblex
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_HOST=database
+      - POSTGRES_DATABASE=welbex
+      - POSTGRES_PORT=5432
   database:
     build: ./database
+    networks:
+      - welbex-network
     environment:
       - POSTGRES_PASSWORD=root
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 3s
+      timeout: 3s
+      # retries: 5
 
 networks:
   welbex-network:
