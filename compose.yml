@@ -33,6 +33,19 @@ services:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 3s
       timeout: 3s
+  nginx:
+    build: ./nginx
+    depends_on:
+      - client
+      - server
+    environment:
+      - HOST=localhost
+      - PORT=8080
+    networks:
+      - welbex-network
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
 
 networks:
   welbex-network:
