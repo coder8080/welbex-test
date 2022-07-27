@@ -9,5 +9,5 @@ module.exports.randomString = function (length) {
 }
 
 module.exports.randomNumber = function (max) {
-  return Math.floor(Math.random() * max)
+  return Math.floor(Math.random() * max) + 1
 }

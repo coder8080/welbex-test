@@ -1,25 +1,18 @@
 const { randomString, randomNumber } = require('../helpers/random.js')
 
-function getMonth() {
-  const r = randomNumber(12).toString()
-  return r.length > 1 ? r : '0' + r
-}
-
-function getDay() {
-  const r = randomNumber(28).toString()
-  return r.length > 1 ? r : '0' + r
-}
-
 const items = []
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 100; i++) {
   items.push({
-    date: `${randomNumber(9999)}-${getMonth()}-${getDay()}`,
+    date: `${randomNumber(9999).toString().padStart(4, '0')}-${randomNumber(12)
+      .toString()
+      .padStart(2, '0')}-${randomNumber(28).toString().padStart(2, '0')}`,
     title: randomString(10),
     count: randomNumber(10),
     distance: randomNumber(100),
   })
 }
 
+module.exports.PORT = process.env.PORT
 module.exports.POSTGRES_USER = process.env.POSTGRES_USER
 module.exports.POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
 module.exports.POSTGRES_HOST = process.env.POSTGRES_HOST

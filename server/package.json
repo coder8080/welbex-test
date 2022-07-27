@@ -9,6 +9,7 @@
   "author": "coder8080",
   "license": "SEE LICENSE IN LICENSE (PARENT FOLDER)",
   "dependencies": {
+    "express": "^4.18.1",
     "nodemon": "^2.0.19",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
