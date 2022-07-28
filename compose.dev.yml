@@ -11,6 +11,8 @@ services:
     restart: unless-stopped
     networks:
       - welbex-network
+    ports:
+      - 3000:3000
   server:
     command: 'npm run dev'
     build: ./server
