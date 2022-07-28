@@ -1,7 +1,55 @@
 @import-normalize;
+@import './assets/styles/variables';
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  outline: none;
+  border: none;
+}
+
+body {
+  background-color: $background-color;
+  font-family: $body-font;
+  font-weight: $normal-font-weight;
+  line-height: $normal-line-height;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: $title-font-weight;
+}
+
+h1 {
+  font-size: $h1-font-size;
+  line-height: $h1-line-height;
+}
+
+h2 {
+  font-size: $h2-font-size;
+  line-height: $h2-line-height;
+}
+
+h3 {
+  font-size: $h3-font-size;
+  line-height: $h3-line-height;
+}
+
+.text-small {
+  font-size: $small-font-size;
+  line-height: $small-line-height;
+}
+
+.text-smaller {
+  font-size: $smaller-font-size;
+  line-height: $smaller-line-height;
+  letter-spacing: $smaller-letter-spacing;
+}
+
+.text-micro {
+  font-size: $micro-font-size;
+  line-height: $micro-line-height;
+  letter-spacing: $micro-letter-spacing;
 }
