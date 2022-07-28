@@ -6,14 +6,27 @@ import Loader from '../../components/loader/loader.component'
 import Pagination from '../../components/pagination/pagination.component'
 import Select from '../../components/select/select.component'
 import Input from '../../components/input/input.component'
+import Error from '../../components/error/error.component'
 import './homepage.styles.scss'
 
 type sortType = 'title' | 'count' | 'distance'
 type filterOption = 'equals' | 'contains' | 'greater' | 'less'
 
+const checkIfCorrect: (ps: {
+  filterField: string
+  filterOption: string
+}) => boolean = ({ filterField, filterOption }) => {
+  if (['greater', 'less'].includes(filterOption) && filterField === 'title') {
+    return false
+  } else if (filterOption === 'contains' && filterField !== 'title') {
+    return false
+  }
+  return true
+}
+
 const HomePage: FC = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<null | string>(null)
   const [items, setItems] = useState<Item[]>([])
   const [sortType, setSortType] = useState<sortType>('count')
   const [page, setPage] = useState(1)
@@ -21,15 +34,17 @@ const HomePage: FC = () => {
   const [filterField, setFilterField] = useState<sortType>('title')
   const [filterOption, setFilterOption] = useState<filterOption>('equals')
   const [filterValue, setFilterValue] = useState('')
+  const [isCorrect, setIsCorrect] = useState(true)
+
+  useEffect(() => {
+    setIsCorrect(checkIfCorrect({ filterField, filterOption }))
+  }, [filterOption, filterField])
 
   useEffect(() => {
     let localFilterValue = filterValue
-    if (['greater', 'less'].includes(filterOption) && filterField === 'title') {
-      localFilterValue = ''
-    } else if (filterOption === 'contains' && filterField !== 'title') {
-      localFilterValue = ''
-    }
+    if (!checkIfCorrect({ filterField, filterOption })) localFilterValue = ''
     setIsLoading(true)
+    setError(null)
     getItems({
       page,
       sorttype: sortType,
@@ -44,12 +59,11 @@ const HomePage: FC = () => {
       })
       .catch((result) => {
         console.log('error loading data')
+        console.error(result?.response?.data?.error ?? result)
         setIsLoading(false)
-        if (result?.data) {
-          setError(result.data.error)
-        } else {
-          setError(result)
-        }
+        setError(
+          'Ошибка при загрузке данных. Обновите страницу или измените фильтры.'
+        )
       })
   }, [page, sortType, filterField, filterOption, filterValue])
 
@@ -98,11 +112,12 @@ const HomePage: FC = () => {
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
           />
+          {!isCorrect ? <Error error={'Некорректный фильтр'} /> : null}
         </div>
       </div>
       {isLoading ? (
         <Loader />
-      ) : (
+      ) : !error ? (
         <>
           <DataTable items={items} />
           <Pagination
@@ -111,6 +126,8 @@ const HomePage: FC = () => {
             setPage={setPage}
           />
         </>
+      ) : (
+        <Error error={error} />
       )}
     </div>
   )
