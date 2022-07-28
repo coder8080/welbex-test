@@ -1,0 +1,14 @@
+@import '../../assets/styles/variables';
+
+.error {
+  color: $red-color;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+
+  .error-icon {
+    width: 20px;
+    height: 20px;
+  }
+}

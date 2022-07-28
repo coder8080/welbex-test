@@ -1,0 +1,52 @@
+services:
+  client:
+    command: 'npm run prod'
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    networks:
+      - welbex-network
+  server:
+    command: 'npm run start'
+    build: ./server
+    restart: unless-stopped
+    networks:
+      - welbex-network
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - PORT=3000
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_HOST=database
+      - POSTGRES_DATABASE=welbex
+      - POSTGRES_PORT=5432
+  database:
+    build: ./database
+    environment:
+      - POSTGRES_PASSWORD=root
+    networks:
+      - welbex-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 3s
+      timeout: 3s
+  nginx:
+    build: ./nginx
+    depends_on:
+      - client
+      - server
+    environment:
+      - HOST=localhost
+      - PORT=8080
+    networks:
+      - welbex-network
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
+
+networks:
+  welbex-network:
+    driver: bridge
