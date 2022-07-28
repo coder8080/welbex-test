@@ -1,17 +1,5 @@
 const client = require('../helpers/dbClient.js')
-
-const optionToOperator = (option) => {
-  switch (option) {
-    case 'equals':
-      return '='
-    case 'contains':
-      return 'LIKE'
-    case 'greater':
-      return '>'
-    case 'less':
-      return '<'
-  }
-}
+const { optionToOperator, checkIfCorrect } = require('../helpers/items')
 
 module.exports.getItems = async (req, res) => {
   const {
@@ -21,6 +9,10 @@ module.exports.getItems = async (req, res) => {
     filteroption: filterOption,
     filtervalue: filterValue,
   } = req.query
+  if (filterValue && !checkIfCorrect({ filterField, filterOption })) {
+    res.status(400).json({ error: 'Некорректные значения полей фильтра' })
+    return
+  }
   let baseQuery = `${
     filterValue
       ? `WHERE ${filterField} ${optionToOperator(filterOption)} ${
