@@ -45,10 +45,13 @@ const HomePage: FC = () => {
 
   // Загрузка данных
   useEffect(() => {
+    // Проверка фильтров. Если некорректны - не использовать
     let localFilterValue = filterValue
     if (!checkIfCorrect({ filterField, filterOption })) localFilterValue = ''
+    // Установка состояния на время загрузки
     setIsLoading(true)
     setError(null)
+    // Загрузка
     getItems({
       page,
       sorttype: sortType,
@@ -57,13 +60,16 @@ const HomePage: FC = () => {
       filtervalue: localFilterValue,
     })
       .then((response) => {
+        // Использование загруженных данных
         setIsLoading(false)
         setItems(response.data.items)
         setTotalPages(response.data.totalPages)
       })
       .catch((result) => {
+        // Вывод ошибки в консоль
         console.log('error loading data')
         console.error(result?.response?.data?.error ?? result)
+        // Сообщение об ошибке для пользователя
         setIsLoading(false)
         setError(
           'Ошибка при загрузке данных. Обновите страницу или измените фильтры.'
@@ -71,6 +77,7 @@ const HomePage: FC = () => {
       })
   }, [page, sortType, filterField, filterOption, filterValue])
 
+  // При изменении порядка сортировки перенаправлять пользователя на первую страницу
   const onSortOrderChange = useCallback((e: Event) => {
     setPage(1)
     setSortType((e.target as HTMLSelectElement).value as sortType)
