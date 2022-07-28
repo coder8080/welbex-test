@@ -9,6 +9,7 @@ export interface getItemsParams {
   filtervalue: string
 }
 
+// Получение записей
 export const getItems: (params: getItemsParams) => Promise<AxiosResponse> = (
   params
 ) => {

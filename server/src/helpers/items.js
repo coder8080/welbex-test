@@ -1,3 +1,5 @@
+// Функции для работы с записями
+
 module.exports.optionToOperator = (option) => {
   switch (option) {
     case 'equals':

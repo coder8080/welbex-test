@@ -1,3 +1,5 @@
+// Создание подключения к базе
+
 const { Client } = require('pg')
 const config = require('../config')
 const postgresConfig = {

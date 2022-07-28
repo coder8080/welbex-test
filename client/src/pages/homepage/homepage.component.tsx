@@ -12,6 +12,7 @@ import './homepage.styles.scss'
 type sortType = 'title' | 'count' | 'distance'
 type filterOption = 'equals' | 'contains' | 'greater' | 'less'
 
+// Проверка корректности фильтра
 const checkIfCorrect: (ps: {
   filterField: string
   filterOption: string
@@ -25,6 +26,7 @@ const checkIfCorrect: (ps: {
 }
 
 const HomePage: FC = () => {
+  // Объявление состояния
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<null | string>(null)
   const [items, setItems] = useState<Item[]>([])
@@ -36,10 +38,12 @@ const HomePage: FC = () => {
   const [filterValue, setFilterValue] = useState('')
   const [isCorrect, setIsCorrect] = useState(true)
 
+  // Перепроверка корректности фильтра при изменнении
   useEffect(() => {
     setIsCorrect(checkIfCorrect({ filterField, filterOption }))
   }, [filterOption, filterField])
 
+  // Загрузка данных
   useEffect(() => {
     let localFilterValue = filterValue
     if (!checkIfCorrect({ filterField, filterOption })) localFilterValue = ''

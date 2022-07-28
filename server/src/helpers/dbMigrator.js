@@ -1,3 +1,5 @@
+// Добавление записей в базу, если их нет
+
 const config = require('../config')
 const client = require('./dbClient.js')
 

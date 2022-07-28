@@ -1,3 +1,5 @@
+// Генерация случайных чисел и строк
+
 module.exports.randomString = function (length) {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
