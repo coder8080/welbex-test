@@ -1,23 +1,48 @@
 const client = require('../helpers/dbClient.js')
 
+const optionToOperator = (option) => {
+  switch (option) {
+    case 'equals':
+      return '='
+    case 'contains':
+      return 'LIKE'
+    case 'greater':
+      return '>'
+    case 'less':
+      return '<'
+  }
+}
+
 module.exports.getItems = async (req, res) => {
-  const { maxvalue: maxValue, maxid: maxId, sorttype: sortType } = req.query
-  if (!['title', 'count', 'distance'].includes(sortType)) {
-    res.status(401).json({ error: 'Не указан порядок сортировки' })
-    return
-  }
-  let query
-  if (!maxValue || !maxId) {
-    query = `SELECT * FROM items ORDER BY ${sortType} ASC, id ASC LIMIT 10;`
-  } else if (maxValue && maxId) {
-    query = `SELECT * FROM items WHERE (${sortType}, id) > ('${maxValue}', ${maxId}) ORDER BY ${sortType} ASC, id ASC LIMIT 10;`
-  } else {
-    res.status(401).json({ error: 'Некорректные данные о последнем пункте' })
-    return
-  }
+  const {
+    page,
+    sorttype: sortType,
+    filterfield: filterField,
+    filteroption: filterOption,
+    filtervalue: filterValue,
+  } = req.query
+  let baseQuery = `${
+    filterValue
+      ? `WHERE ${filterField} ${optionToOperator(filterOption)} ${
+          filterOption === 'contains'
+            ? `'%${filterValue}%'`
+            : typeof filterValue === 'number'
+            ? `${filterValue}`
+            : `'${filterValue}'`
+        }`
+      : ''
+  }`
+  let query = `SELECT * FROM items ${baseQuery} ORDER BY ${sortType} ASC LIMIT 10 OFFSET ${
+    (Number(page) - 1) * 10
+  };`
+  let countQuery = `SELECT COUNT(*) FROM items ${baseQuery}`
   try {
-    const result = await client.query(query)
-    res.status(200).json({ items: result.rows })
+    const items = await client.query(query)
+    const count = await client.query(countQuery)
+    res.status(200).json({
+      items: items.rows,
+      totalPages: Math.ceil(count.rows[0].count / 10),
+    })
   } catch (error) {
     res.status(500).json({ error })
   }

@@ -1,0 +1,27 @@
+@import '../../assets/styles/variables';
+
+.input {
+  background-color: $container-color;
+  box-shadow: $input-shadow;
+  border-radius: $border-radius;
+  border: none;
+  padding: 12px 16px;
+  resize: none;
+  width: 100%;
+  transition: box-shadow 0.15s, 0.15s;
+  box-sizing: border-box;
+  outline: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+
+  &::placeholder {
+    color: $disabled-color;
+    font-weight: 400;
+  }
+
+  &:hover,
+  &:focus {
+    box-shadow: $input-shadow-hover;
+  }
+}
